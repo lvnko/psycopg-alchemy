@@ -32,4 +32,5 @@ with psycopg2.connect(conf) as conn:
 
         rows = cur.fetchall()
         print(rows)
-        # conn.commit() # Not needed with autocommit=True
+        
+    # conn.commit() # Not needed with autocommit=True
