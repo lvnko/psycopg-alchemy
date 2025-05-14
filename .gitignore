@@ -10,3 +10,7 @@
 
 # local env files
 .env*.local
+
+# python cache
+__pycache__/
+*.pyc
