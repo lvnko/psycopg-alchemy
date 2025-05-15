@@ -41,11 +41,6 @@ SELECT * FROM date_types_test;
 # 3. DOUBLE PRECISION 類型的資料可以是小數點後有 15 位數的數字
 # 4. INT 類型的資料可以是整數
 # 5. VARCHAR 類型的資料可以是字串
-# 6. 在 PostgreSQL 中，BOOLEAN 類型的資料可以是 TRUE、FALSE、't'、'f'、'1'、'0'
-# 7. DECIMAL 類型的資料可以是小數點後有 10 位數的數字
-# 8. DOUBLE PRECISION 類型的資料可以是小數點後有 15 位數的數字
-# 9. INT 類型的資料可以是整數
-# 10. VARCHAR 類型的資料可以是字串
 
 with psycopg2.connect(conf) as conn:
     print(f"Connection Encoding : {conn.encoding}")
