@@ -1,6 +1,6 @@
 # Week #025 ~ #028
 
-## Psycopg 在 Pythong 上的使用
+## Psycopg 在 Python 上的使用
 
 ### `with` 陳述式與交易 (Transaction) 處理
 
