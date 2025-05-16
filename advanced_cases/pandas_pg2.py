@@ -25,6 +25,9 @@ df = pd.read_sql_query(select_sql, conn, parse_dates={"birthday": "%Y-%m-%d"})
 
 df["full_name"] = df["first_name"] + ", " + df["last_name"]
 df["age"] = ((pd.to_datetime('now') - df["birthday"]) / pd.Timedelta(days=365.25)).astype(int)
+# 以下這句原先教程所述的代碼無法執行，所以我改用了以上的方法處理 age 的計算
+# df["age"] = (pd.to_datetime('now') - df["birthday"]).astype("<m8[Y]")
+
 
 # print(df)
 # print(df.dtypes)
