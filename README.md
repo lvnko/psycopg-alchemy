@@ -106,6 +106,13 @@ with conn.cursor('my_server_side_cursor') as cursor:
 
 請注意，伺服器端游標通常需要在一個事務塊 (transaction block) 內使用，並且在事務結束時會自動關閉。
 
+## Postgres Terminal Command
+
+```shell
+psql -h localhost -U postgres
+# e.g. psql -U <username> -d <dbname> -h <host> -p <port>
+```
+
 ## 有用資源
 - Psycopg 使用說明 [[連結](https://www.psycopg.org/docs/)]
     * 錯誤代碼列表 [[連結](https://www.psycopg.org/docs/errors.html#sqlstate-exception-classes)]
