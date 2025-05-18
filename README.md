@@ -137,3 +137,5 @@ psql -h localhost -U postgres
 ## 3. 有用資源
 - Psycopg 使用說明 [[連結](https://www.psycopg.org/docs/)]
     * 錯誤代碼列表 [[連結](https://www.psycopg.org/docs/errors.html#sqlstate-exception-classes)]
+- SQLAlchemy 簡單說出 10 個優點 [[連結](https://pajhome.org.uk/blog/10_reasons_to_love_sqlalchemy.html)]
+- Python 資料庫應用程式介面規範 v2.0 (PEP 249) [[連結](https://peps.python.org/pep-0249/)]
