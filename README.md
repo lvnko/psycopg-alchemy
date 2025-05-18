@@ -127,6 +127,47 @@ with conn.cursor('my_server_side_cursor') as cursor:
 
 將資料庫密鑰等敏感資訊儲存在獨立的設定檔 (如 .ini 檔案) 中，並使用 Config Parser 進行讀取，是業界通用的安全實踐。這有效避免了將敏感資訊硬編碼在程式碼中，降低了意外洩露的風險，尤其是在使用版本控制系統時。此外，這種方法也使得在不同環境 (開發、測試、生產) 中部署應用程式變得更加靈活，只需修改設定檔即可切換資料庫連線資訊，無需更改程式碼。這在微服務架構和雲端部署中尤為重要。
 
+### 1.8 SQLAlchemy 的應用
+
+SQLAlchemy 作為一個Python的ORM（對象關係映射）工具，開發者可以使用它建立數據庫連接，定義模型和映射，並執行基本的CRUD操作。
+
+#### 1.8.1. 優勢 (Advantages)
+
+SQLAlchemy 提供了許多優勢，使其成為 Python 中廣泛使用的資料庫工具：
+
+*   **靈活性與控制力**: SQLAlchemy 提供了 ORM 和 Core 兩種使用方式。ORM 提供了高層次的抽象，簡化了資料庫操作；而 Core 則允許開發者編寫原始 SQL，提供了更精細的控制。這種靈活性使得 SQLAlchemy 能夠適應各種複雜的資料庫需求。
+*   **強大的 ORM**: SQLAlchemy 的 ORM 功能強大且靈活，支援多種繼承策略、關聯關係映射和複雜查詢。它可以將 Python 物件無縫地映射到資料庫表格，簡化了資料的持久化和檢索。
+*   **連接池與效能**: SQLAlchemy 內建了連接池管理，可以有效地管理資料庫連接，減少連接建立和關閉的開銷，提高應用程式的效能。
+*   **資料庫方言支援**: SQLAlchemy 支援多種資料庫系統，並提供了相應的資料庫方言 (Dialect)，使得在不同資料庫之間遷移變得更加容易。
+*   **活躍的社群與完善的文檔**: SQLAlchemy 擁有活躍的社群和完善的文檔，為開發者提供了豐富的資源和支援。
+
+#### 1.8.2. 進階知識 (Advanced Knowledge)
+
+深入了解 SQLAlchemy 可以進一步提升開發效率和應用程式效能：
+
+*   **以 Engine 在底層做核心、而 Session 在為上層的街口**: 
+
+    * **Engine** (或 Connection，屬於 SQLAlchemy Core 的一部分)，是與資料庫進行交互的核心，負責與資料庫建立實際的物理連接並管理連接池。它是 SQLAlchemy 與資料庫驅動程式交互的底層接口。
+    而 Session (屬於 SQLAlchemy ORM 的一部分) 則提供了一個高層次的接口，用於管理 ORM 物件的狀態和與資料庫的交互。
+
+    * **Session**: Session (屬於 SQLAlchemy ORM 的一部分) 提供了一個高層次的接口，用於管理 ORM 物件的狀態和與資料庫的交互。Session 通過 Engine (或 Connection) 來執行實際的 SQL 語句，但它提供了物件的持久化、身份映射、事務管理和生命週期等 ORM 功能，理解 Session 的這些特性對於編寫高效且可靠的資料庫應用程式非常重要。若想了解更多關於 Session 的使用方法及知識，可以參考這篇：[官方文件](https://docs.sqlalchemy.org/en/20/orm/session_basics.html)。
+
+    * **兩者放在一起，如何理解**: 可以將 Engine 視為資料庫連接的工廠和管理器，而 Session 則是與資料庫進行 ORM 級別交互的工作單元。一個 Engine 可以被多個 Session 使用，每個 Session 在需要時從 Engine 獲取連接。
+
+*   **惰性載入與積極載入**: SQLAlchemy 支援惰性載入 (Lazy Loading) 和積極載入 (Eager Loading)。惰性載入在訪問關聯物件時才執行查詢，而積極載入則在查詢主物件時一併載入關聯物件。選擇合適的載入策略可以顯著影響查詢效能。若想更進一步瞭解它的實現技巧，可以參考包括 ``joinedload``、``subqueryload``與``selectinload`` 這些在使用 ``session`` 訪問時的設定選項。
+
+*   **單元測試與模擬**: SQLAlchemy 提供了工具和模式，使得對資料庫交互的程式碼進行單元測試和模擬變得更加容易。
+*   **遷移工具**: 結合 Alembic 等遷移工具，可以方便地管理資料庫模式的變更。
+
+#### 1.8.3. 注意事項 (Things to Notice)
+
+在使用 SQLAlchemy 時，需要注意一些事項：
+
+*   **Session 的使用**: Session 不是執行緒安全的，每個執行緒應該使用自己的 Session。在 Web 應用程式中，通常每個請求使用一個 Session。
+*   **事務管理**: 雖然 ORM 在某些情況下會自動管理事務，但在處理複雜操作時，明確地管理事務 (使用 `session.commit()`, `session.rollback()`) 是很重要的。
+*   **SQLAlchemy Core 與 ORM 的選擇**: 根據具體需求選擇使用 SQLAlchemy Core 或 ORM。對於簡單的查詢和操作，Core 可能更直接；對於複雜的資料模型和業務邏輯，ORM 更具優勢。
+*   **Serial 類型與 Flush**: 對應 Postgres 預設 database 設計的 flush 設定，有時需要用到它來避免作為 primary key 的 serial number 在沒有 (或沒能) ``session.commit()`` 時仍會增算的情況。理解 `session.flush()` 的作用以及它與 `session.commit()` 的區別對於處理某些特定的資料庫行為非常重要。
+
 ## 2. Postgres Terminal Command
 
 ```shell
