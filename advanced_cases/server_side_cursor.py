@@ -5,7 +5,7 @@ conf = "dbname=postgres host=localhost user=postgres password=lvnko"
 select_sql = "SELECT * FROM cursor_batch_test;"
 
 with psycopg2.connect(conf) as conn:
-    with conn.cursor("myCursor") as cur: # 在 conn.cursro() 函式中輸入名字，便觸發把
+    with conn.cursor("myCursor") as cur: # 在 conn.cursro() 函式中輸入名字，便觸發使用伺服器端 Cursor
         cur.itersize = 3
         try:
             cur.execute(select_sql)
